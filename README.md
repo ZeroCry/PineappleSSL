@@ -1,13 +1,13 @@
 # PineappleSSL
 A way to force your pineapple to use SSL
 
-##Introduction
+## Introduction
 You have a Wi-Fi Pineapple and want to harness all its power yet, everytime you log into it, you are doing so over http. Your username and passwords are being sent unencrypted over the network so the wrong people could get access to them. This guide will show you how to configure your Pineapple so all the network traffic is encrypted.
 
 Essentially, we are going to configure nginx (the Pineapple's server of choice) to use a self-signed certificate for https connections. To do this we need to generate a root certificate, configure openssl to act as a certificate authority, and generate an ssl certificate (signed by our root cert) for nginx to use so that clients can initiate an https connection to the Pineapple.
 
-##Steps
-###Login and get updated
+## Steps
+### Login and get updated
 First join your Pineapple's network so you can access the shell. Login to your Pineapple via SSH:
 
     $ ssh root@172.16.42.1
@@ -21,7 +21,7 @@ Once your Pineapple's package information is updated, install the `libopenssl` a
     # opkg install libopenssl
     # opkg install openssl-util 
 
-###SSL config
+### SSL config
 After you have installed the above libraries, copy over the openssl config from this repository. Enter the following commands to get to the config directory on the Pineapple, and make a copy of the current config just in case:
 
     # cd /etc/ssl
@@ -41,7 +41,7 @@ Alternatively, you can checkout this repository (or download the file independen
 
 The configuration sets some basic values so the openssl library we just installed can process certificate signing requests using keys and a certificate we are going to generate.
 
-###Creating the SSL/TLS certs
+### Creating the SSL/TLS certs
 For this section, you'll want to be in the ssl certs directory on the Pineapple:
 
     # cd /etc/ssl/certs
@@ -69,7 +69,7 @@ and process the CSR using our root certificate:
 
 Finally, we just need to configure nginx to use our new self-signed certificate.
 
-###NGINX config
+### NGINX config
 The nginx config is located in the nginx directory. Navigate there:
 
     # cd /etc/nginx
@@ -86,6 +86,6 @@ After you write the nginx configuration, you need to restart nginx in order to p
 
 We've now configured nginx to use the private key and certificate we generated to facilitate ssl/tls connections with clients.
 
-##Results
+## Results
 Go to your browser and type [http://172.16.42.1:1471]([http://172.16.42.1:1471), you should see a *bad request* page. Try again with https: [https://172.16.42.1:1471]([https://172.16.42.1:1471). You will now be sent to a page that warns you that your connection is not private as it is using a self-signed certificate. However, this is exactly what we want; click advanced and then proceed to your pineapples login page over SSL.
 
